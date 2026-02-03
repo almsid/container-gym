@@ -1,0 +1,66 @@
+{
+  "name": "Container Gym",
+  "image": "ghcr.io/shart-cloud/gymctl:latest",
+
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true,
+      "upgradePackages": true,
+      "username": "gymuser"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "enableNonRootDocker": true
+    }
+  },
+
+  // Container configuration
+  "containerEnv": {
+    "GYMCTL_HOME": "/home/gymuser/.gym",
+    "DOCKER_HOST": "unix:///var/run/docker.sock"
+  },
+
+  // Mount the Docker socket for Docker exercises
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+
+  // VS Code extensions for working with exercises
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "redhat.vscode-yaml",
+        "golang.go",
+        "ms-vscode.makefile-tools"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh"
+          }
+        }
+      }
+    }
+  },
+
+  // Run as non-root user
+  "remoteUser": "gymuser",
+
+  // Commands to run after the container is created
+  "postCreateCommand": "gymctl list && echo 'Welcome to Container Gym! Run \"gymctl list\" to see available exercises.'",
+
+  // Forward ports for any services
+  "forwardPorts": [],
+
+  // Workspace folder
+  "workspaceFolder": "/workspace",
+
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind"
+}

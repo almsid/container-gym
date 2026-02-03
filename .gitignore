@@ -1,0 +1,17 @@
+# Workspace files (created during exercises)
+workspace/*
+!workspace/.gitkeep
+
+# Docker volumes
+gym-data/
+dind-data/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

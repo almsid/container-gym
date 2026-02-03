@@ -1,0 +1,14 @@
+{
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "docker.environment": {
+    "DOCKER_HOST": "unix:///var/run/docker.sock"
+  },
+  "files.watcherExclude": {
+    "**/gym-data/**": true,
+    "**/dind-data/**": true
+  },
+  "search.exclude": {
+    "**/gym-data": true,
+    "**/dind-data": true
+  }
+}

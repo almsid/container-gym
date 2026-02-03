@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  gymctl:
+    image: ghcr.io/shart-cloud/gymctl:latest
+    pull_policy: always
+    container_name: container-gym
+    hostname: gym
+    stdin_open: true
+    tty: true
+    volumes:
+      # Mount Docker socket for Docker exercises
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Persist progress and work
+      - gym-data:/home/gymuser/.gym
+      # Mount workspace for exercise files
+      - ./workspace:/workspace
+    environment:
+      - GYMCTL_HOME=/home/gymuser/.gym
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    working_dir: /workspace
+    user: gymuser
+    command: /bin/bash
+    networks:
+      - gym-network
+
+  # Optional Docker-in-Docker for isolated exercises
+  dind:
+    image: docker:24-dind
+    container_name: gym-dind
+    privileged: true
+    profiles:
+      - dind
+    environment:
+      - DOCKER_TLS_CERTDIR=
+    networks:
+      - gym-network
+    volumes:
+      - dind-data:/var/lib/docker
+
+volumes:
+  gym-data:
+    name: gym-progress
+  dind-data:
+    name: gym-dind-data
+
+networks:
+  gym-network:
+    name: gym-net
+    driver: bridge
