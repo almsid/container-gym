@@ -1,6 +1,6 @@
 {
   "name": "Container Gym",
-  "image": "ghcr.io/shart-cloud/gymctl:v0.1.0",
+  "image": "ghcr.io/shart-cloud/gymctl:latest",
 
   // Features to add to the dev container
   "features": {
@@ -47,6 +47,10 @@
 
   // Run as non-root user
   "remoteUser": "gymuser",
+
+  // Ensure the image exists locally before the Dev Containers CLI inspects it.
+  // If this fails, it's typically because the tag doesn't exist or GHCR access isn't configured (private package).
+  "initializeCommand": "docker pull ghcr.io/shart-cloud/gymctl:latest",
 
   // Commands to run after the container is created
   "postCreateCommand": "gymctl list && echo 'Welcome to Container Gym! Run \"gymctl list\" to see available exercises.'",

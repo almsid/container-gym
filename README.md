@@ -132,6 +132,13 @@ gymctl status
 
 ## Troubleshooting
 
+### Devcontainer Fails to Create (GHCR Image)
+
+If Codespaces/Dev Containers fails with an error like `docker inspect --type image ghcr.io/shart-cloud/gymctl:...`, Docker couldn't fetch the `gymctl` image.
+
+- Verify the tag exists (this repo defaults to `ghcr.io/shart-cloud/gymctl:latest`).
+- If the GHCR package is private, grant the Codespace/repository read access to the package (or make the package public), then rebuild the devcontainer.
+
 ### Permission Issues
 
 If you encounter Docker socket permission errors:
