@@ -4,7 +4,18 @@ set -euo pipefail
 GYMCTL_IMAGE="${GYMCTL_IMAGE:-ghcr.io/shart-cloud/gymctl:latest}"
 GYMCTL_HOME="${GYMCTL_HOME:-$HOME/.gym}"
 
-mkdir -p "$GYMCTL_HOME"
+# Create gym directory structure with proper permissions
+mkdir -p "$GYMCTL_HOME/workdir"
+chmod -R 777 "$GYMCTL_HOME"
+
+# Initialize progress file if it doesn't exist
+if [ ! -f "$GYMCTL_HOME/progress.yaml" ]; then
+    cat > "$GYMCTL_HOME/progress.yaml" << 'EOF'
+version: 1
+exercises: {}
+EOF
+    chmod 666 "$GYMCTL_HOME/progress.yaml"
+fi
 
 echo "Installing gymctl wrapper (runs ${GYMCTL_IMAGE})..."
 sudo tee /usr/local/bin/gymctl >/dev/null <<'EOF'
