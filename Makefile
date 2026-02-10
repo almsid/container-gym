@@ -1,9 +1,10 @@
 # Container Gym Makefile
 
 # Variables
-COMPOSE = docker compose
+COMPOSE ?= docker compose
 GYMCTL_IMAGE = ghcr.io/shart-cloud/gymctl:latest
 CONTAINER_NAME = container-gym
+DOCKER ?= docker
 
 .PHONY: help up down shell clean status logs pull
 
@@ -30,7 +31,7 @@ down: ## Stop container gym environment
 shell: ## Connect to gymctl container
 	@echo "Connecting to Container Gym..."
 	@echo "Type 'gymctl list' to see available exercises"
-	@docker exec -it $(CONTAINER_NAME) /bin/bash
+	@$(DOCKER) exec -it $(CONTAINER_NAME) /bin/bash
 
 status: ## Show container status
 	@echo "Container Gym Status:"
@@ -48,7 +49,7 @@ restart: down up ## Restart container gym
 
 # Development commands
 dev-shell: ## Start shell with live code mount
-	docker run -it --rm \
+	$(DOCKER) run -it --rm \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v gym-progress:/home/gymuser/.gym \
 		-v ./workspace:/workspace \
@@ -60,7 +61,7 @@ test-exercise: ## Test a specific exercise (use EXERCISE=name)
 		echo "Usage: make test-exercise EXERCISE=jerry-root-container"; \
 		exit 1; \
 	fi
-	@docker exec -it $(CONTAINER_NAME) gymctl start $(EXERCISE)
+	@$(DOCKER) exec -it $(CONTAINER_NAME) gymctl start $(EXERCISE)
 
 # Docker-in-Docker mode
 dind-up: ## Start with Docker-in-Docker
@@ -72,4 +73,4 @@ dind-up: ## Start with Docker-in-Docker
 dind-shell: ## Connect to gymctl with DinD
 	@echo "Connecting to Container Gym (DinD mode)..."
 	@echo "Docker daemon available at tcp://dind:2375"
-	@docker exec -it -e DOCKER_HOST=tcp://dind:2375 $(CONTAINER_NAME) /bin/bash
+	@$(DOCKER) exec -it -e DOCKER_HOST=tcp://dind:2375 $(CONTAINER_NAME) /bin/bash

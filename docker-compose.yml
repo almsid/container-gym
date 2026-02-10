@@ -1,15 +1,13 @@
 services:
   gymctl:
-    build:
-      context: ../gymctl
-      dockerfile: Dockerfile
+    image: ghcr.io/shart-cloud/gymctl:latest
     container_name: container-gym
     hostname: gym
     stdin_open: true
     tty: true
     volumes:
       # Mount Docker socket for Docker exercises
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock
       # Persist progress and work
       - gym-data:/home/gymuser/.gym
       # Mount workspace for exercise files
@@ -45,5 +43,5 @@ volumes:
 
 networks:
   gym-network:
-    name: gym-net
-    driver: bridge
+    name: podman
+    external: true
